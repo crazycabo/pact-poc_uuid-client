@@ -1,0 +1,54 @@
+plugins {
+	id 'org.springframework.boot' version '2.3.2.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+	id 'java'
+	id "au.com.dius.pact" version "4.1.0"
+}
+
+group = 'com.ingendevelopment'
+version = System.getenv('CODEBUILD_RESOLVED_SOURCE_VERSION') ?: '1.0.0'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	compile 'org.webjars:bootstrap:4.5.0'
+	compile 'org.webjars.npm:popper.js:1.16.1-lts'
+	compile 'org.webjars:jquery:3.5.1'
+	compile 'org.webjars:webjars-locator:0.40'
+	compile 'org.springframework.cloud:spring-cloud-starter-openfeign:2.2.4.RELEASE'
+	compile 'com.mashape.unirest:unirest-java:1.4.9'
+	compile 'ch.qos.logback:logback-core:1.2.3'
+	compile 'ch.qos.logback:logback-classic:1.2.3'
+	compile 'au.com.dius:pact-jvm-consumer-junit5_2.12:3.6.15'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	annotationProcessor 'org.projectlombok:lombok'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+pact {
+	broker {
+		pactBrokerUrl = System.getenv('PACT_BROKER_URL')
+		pactBrokerToken = System.getenv('PACT_WRITE_TOKEN')
+	}
+	publish {
+		pactDirectory = 'build/pacts'
+	}
+}
