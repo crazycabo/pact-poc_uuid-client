@@ -31,7 +31,7 @@ public class ConsumerPactTest {
     @Pact(provider = "UUIDValidate", consumer = "UUIDClient")
     public RequestResponsePact createPact(PactDslWithProvider builder) {
         Map<String, String> headers = new HashMap<>();
-        headers.put("Content-Type", "application/json");
+        headers.put("Content-Type", "application/json; charset=utf-8");
 
         return builder
                 .given("request validated UUID")
